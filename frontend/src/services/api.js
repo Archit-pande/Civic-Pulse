@@ -1,5 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL;
-export default API_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://civic-pulse-v6eu.onrender.com/api";
+
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("civic-token");
