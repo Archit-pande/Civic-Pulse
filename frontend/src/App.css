@@ -30,31 +30,33 @@ button {
 
 .navbar {
   height: 76px;
-  padding: 0 7%;
+  padding: 0 3%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
   background: rgba(7, 17, 31, .9);
   backdrop-filter: blur(15px);
   border-bottom: 1px solid #1e293b;
+  box-sizing: border-box;
 }
 
+.navbar > button {
+  margin-left: 12px;
+}
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  flex: 0 0 220px;
+  height: 76px;
 }
 
 .logo-icon {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #2563eb;
+  width: 210px;
+  height: 75px;
+  object-fit: contain;
+  display: block;
 }
 
 .logo h2 {
@@ -72,7 +74,10 @@ button {
 
 .nav-links {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex: 1;
 }
 
 .nav-links button {
@@ -104,6 +109,12 @@ button {
   border-color: #2563eb;
 }
 
+.navbar > .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
 /* HERO */
 
 .hero {
