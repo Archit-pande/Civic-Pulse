@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import CivicMap from "./CivicMap";
 import CivicChatbot from "./CivicChatbot";
-import civicPulseLogo from "./assets/civic-pulse-logo.png";
 
 import {
   MapPin,
@@ -211,15 +210,15 @@ function App() {
 
       <nav className="navbar">
 
- <div
+        <div
   className="logo"
   onClick={() => setPage("home")}
   style={{ cursor: "pointer" }}
 >
   <img
-    src={civicPulseLogo}
-    alt="civic pulse"
-    className="logo-icon"
+    src="/civic-logo.png"
+    alt="civic issue"
+    className="civic-logo"
   />
 </div>
 
@@ -1039,7 +1038,6 @@ function Step({
    LOGIN
 ========================= */
 
-
 function Login({
   login,
   setPage
@@ -1048,75 +1046,13 @@ function Login({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("citizen");
-
-  // login | register | forgot
   const [mode, setMode] = useState("login");
-
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [busy, setBusy] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
-    setSuccess("");
-
-
-    if (mode === "forgot") {
-      if (!email.trim()) {
-        setError("Enter your email address.");
-        return;
-      }
-
-      setBusy(true);
-
-      try {
-        const baseUrl =
-          import.meta.env.VITE_API_URL ||
-          "https://civic-pulse-v6eu.onrender.com/api";
-
-        const response = await fetch(
-          `${baseUrl}/auth/forgot-password`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              email: email.trim().toLowerCase()
-            })
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data?.message ||
-            "Unable to send password reset link."
-          );
-        }
-
-        setSuccess(
-          "If an account exists with this email, a password reset link has been sent."
-        );
-
-        setPassword("");
-
-      } catch (error) {
-        setError(
-          error.message ||
-          "Unable to connect to the server."
-        );
-      } finally {
-        setBusy(false);
-      }
-
-      return;
-    }
-
-    
 
     if (!email.trim() || !password) {
       setError("Enter your email and password.");
@@ -1131,44 +1067,31 @@ function Login({
     setBusy(true);
 
     try {
-      const endpoint =
-        mode === "login"
-          ? "/auth/login"
-          : "/auth/register";
+      const endpoint = mode === "login"
+        ? "/auth/login"
+        : "/auth/register";
 
       const baseUrl =
-        import.meta.env.VITE_API_URL ||
-        "https://civic-pulse-v6eu.onrender.com/api";
+  import.meta.env.VITE_API_URL ||
+  "https://civic-pulse-v6eu.onrender.com/api";
 
-      const response = await fetch(
-        `${baseUrl}${endpoint}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(
-            mode === "login"
-              ? {
-                  email: email.trim().toLowerCase(),
-                  password
-                }
-              : {
-                  name: name.trim(),
-                  email: email.trim().toLowerCase(),
-                  password,
-                  role
-                }
-          )
-        }
-      );
+      const response = await fetch(`${baseUrl}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(
+          mode === "login"
+            ? { email, password }
+            : { name, email, password, role }
+        )
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data?.message ||
-          "Authentication failed."
+          data?.message || "Authentication failed."
         );
       }
 
@@ -1178,7 +1101,6 @@ function Login({
         role: data.user.role,
         token: data.token
       });
-
     } catch (error) {
       setError(
         error.message ||
@@ -1189,313 +1111,137 @@ function Login({
     }
   };
 
-  
-
-  const openForgotPassword = () => {
-    setMode("forgot");
-    setError("");
-    setSuccess("");
-    setPassword("");
-  };
-
-  
-  // SWITCH TO LOGIN
-
-
-  const backToLogin = () => {
-    setMode("login");
-    setError("");
-    setSuccess("");
-    setPassword("");
-  };
-
-  // =========================
-  // SWITCH LOGIN / REGISTER
-  // =========================
-
-  const toggleRegister = () => {
-    setMode(
-      mode === "login"
-        ? "register"
-        : "login"
-    );
-
-    setError("");
-    setSuccess("");
-    setPassword("");
-  };
-
   return (
     <main className="auth-page">
-
       <form
         className="auth-card"
         onSubmit={handleSubmit}
       >
+       <div className="auth-icon">
+  <img
+    src="/civic-logo.png"
+    alt="civic issue"
+    className="auth-logo"
+  />
+</div>
 
-        
+        <h1>
+          {mode === "login"
+            ? "Welcome to Civic Pulse"
+            : "Create your Civic Pulse account"}
+        </h1>
 
-        <div className="auth-icon">
-          🚦
-        </div>
+        <p>
+          {mode === "login"
+            ? "Login to continue"
+            : "Create an account to report and track issues."}
+        </p>
 
-
-      
-
-        {mode === "forgot" ? (
-
+        {mode === "register" && (
           <>
-
-            <h1>
-              Reset your password
-            </h1>
-
-            <p>
-              Enter your registered email and
-              we'll send you a password reset link.
-            </p>
-
-
-         
-
-            <label>
-              Email
-            </label>
+            <label>Name</label>
 
             <input
-              type="email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+              autoComplete="name"
             />
-
-
-           
-
-            {error && (
-              <div
-                className="auth-error"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-
-           
-
-            {success && (
-              <div
-                className="auth-success"
-                role="status"
-              >
-                {success}
-              </div>
-            )}
-
-
-
-            <button
-              className="primary-btn"
-              type="submit"
-              disabled={busy}
-            >
-              {busy
-                ? "Sending..."
-                : "Send Reset Link →"}
-            </button>
-
-
-          
-
-            <button
-              type="button"
-              className="back-btn"
-              onClick={backToLogin}
-            >
-              ← Back to Login
-            </button>
-
-          </>
-
-        ) : (
-
-        
-
-          <>
-
-            <h1>
-              {mode === "login"
-                ? "Welcome to Civic Pulse"
-                : "Create your Civic Pulse account"}
-            </h1>
-
-            <p>
-              {mode === "login"
-                ? "Login to continue"
-                : "Create an account to report and track issues."}
-            </p>
-
-
-           
-
-            {mode === "register" && (
-              <>
-                <label>
-                  Name
-                </label>
-
-                <input
-                  value={name}
-                  onChange={(e) =>
-                    setName(e.target.value)
-                  }
-                  placeholder="Enter your name"
-                  autoComplete="name"
-                />
-              </>
-            )}
-
-
-           
-
-            <label>
-              Email
-            </label>
-
-            <input
-              type="email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-
-
-            
-
-            <label>
-              Password
-            </label>
-
-            <input
-              type="password"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              placeholder="At least 6 characters"
-              minLength={6}
-              autoComplete={
-                mode === "login"
-                  ? "current-password"
-                  : "new-password"
-              }
-            />
-
-
-            
-
-            {mode === "login" && (
-              <button
-                type="button"
-                className="back-btn"
-                onClick={openForgotPassword}
-              >
-                Forgot Password?
-              </button>
-            )}
-
-
-           
-            {mode === "register" && (
-              <>
-                <label>
-                  Account type
-                </label>
-
-                <select
-                  value={role}
-                  onChange={(e) =>
-                    setRole(e.target.value)
-                  }
-                >
-                  <option value="citizen">
-                    Citizen
-                  </option>
-
-                  <option value="authority">
-                    Authority
-                  </option>
-                </select>
-              </>
-            )}
-
-
-            
-
-            {error && (
-              <div
-                className="auth-error"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
-
-
-            
-
-            <button
-              className="primary-btn"
-              type="submit"
-              disabled={busy}
-            >
-              {busy
-                ? "Please wait..."
-                : mode === "login"
-                ? "Login →"
-                : "Create Account →"}
-            </button>
-
-
-            
-
-            <button
-              type="button"
-              className="back-btn"
-              onClick={toggleRegister}
-            >
-              {mode === "login"
-                ? "Create a new account"
-                : "Already have an account? Login"}
-            </button>
-
-
-          
-
-            <button
-              type="button"
-              className="back-btn"
-              onClick={() => setPage("home")}
-            >
-              ← Back to Home
-            </button>
-
           </>
         )}
 
-      </form>
+        <label>Email</label>
 
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          autoComplete="email"
+        />
+
+        <label>Password</label>
+
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="At least 6 characters"
+          minLength={6}
+          autoComplete={
+            mode === "login"
+              ? "current-password"
+              : "new-password"
+          }
+        />
+
+        {mode === "register" && (
+          <>
+            <label>Account type</label>
+
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="citizen">
+                Citizen
+              </option>
+
+              <option value="authority">
+                Authority
+              </option>
+            </select>
+          </>
+        )}
+
+        {error && (
+          <div className="auth-error" role="alert">
+            {error}
+          </div>
+        )}
+
+        <button
+          className="primary-btn"
+          type="submit"
+          disabled={busy}
+        >
+          {busy
+            ? "Please wait..."
+            : mode === "login"
+            ? "Login →"
+            : "Create Account →"}
+        </button>
+
+        <button
+          type="button"
+          className="back-btn"
+          onClick={() => {
+            setMode(
+              mode === "login"
+                ? "register"
+                : "login"
+            );
+            setError("");
+          }}
+        >
+          {mode === "login"
+            ? "Create a new account"
+            : "Already have an account? Login"}
+        </button>
+
+        <button
+          type="button"
+          className="back-btn"
+          onClick={() => setPage("home")}
+        >
+          ← Back to Home
+        </button>
+      </form>
     </main>
   );
 }
+
+
 /* =========================
    CITIZEN DASHBOARD
 ========================= */
