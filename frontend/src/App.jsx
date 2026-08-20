@@ -211,17 +211,16 @@ function App() {
       <nav className="navbar">
 
         <div
-          className="logo"
-          onClick={() => setPage("home")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="logo-icon">🚦</div>
-
-          <div>
-            <h2>CIVIC</h2>
-            <span>PULSE</span>
-          </div>
-        </div>
+  className="logo"
+  onClick={() => setPage("home")}
+  style={{ cursor: "pointer" }}
+>
+  <img
+    src="/civic-logo.png"
+    alt="civic issue"
+    className="civic-logo"
+  />
+</div>
 
         <div className="nav-links">
 
@@ -1118,9 +1117,13 @@ function Login({
         className="auth-card"
         onSubmit={handleSubmit}
       >
-        <div className="auth-icon">
-          🚦
-        </div>
+       <div className="auth-icon">
+  <img
+    src="/civic-logo.png"
+    alt="civic issue"
+    className="auth-logo"
+  />
+</div>
 
         <h1>
           {mode === "login"

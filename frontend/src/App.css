@@ -46,8 +46,14 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor : pointer;
 }
-
+.civic-logo {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  display: block;
+}
 .logo-icon {
   width: 40px;
   height: 40px;
@@ -414,30 +420,41 @@ button {
 
 .auth-page {
   min-height: calc(100vh - 76px);
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 70px 20px;
+  align-items: flex-start;
+  padding: 40px 20px 70px;
+  background: #07111f;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   padding: 42px;
-  border-radius: 22px;
+  border-radius: 28px;
   background: #0e1a2b;
   border: 1px solid #1e293b;
   box-shadow: 0 30px 80px rgba(0,0,0,.35);
 }
 
 .auth-icon {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
+  width: 180px;
+  height: 70px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
   border-radius: 15px;
-  background: #2563eb;
-  font-size: 25px;
+}
+
+.auth-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 18px;
 }
 
 .auth-card h1 {
@@ -463,7 +480,7 @@ button {
   width: 100%;
   padding: 13px 14px;
   border: 1px solid #29384d;
-  border-radius: 9px;
+  border-radius: 12px;
   outline: none;
   background: #081322;
   color: white;
